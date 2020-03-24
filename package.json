@@ -1,0 +1,18 @@
+{
+  "name": "covid-19-daily-videos",
+  "version": "1.0.0",
+  "description": "Create daily videos per country of cases and deaths per day.",
+  "main": "queue.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "fast-csv": "^4.1.3",
+    "moment": "^2.24.0",
+    "shotstack-sdk": "0.0.17",
+    "yargs": "^15.3.1"
+  }
+}
