@@ -25,10 +25,11 @@ const generateVideo = (country, cases) => {
     let videoLength = 0;
     const VIDEO_TAIL_LENGTH = 5;
     const FRAME_LENGTH = 0.04;
-    const COUNTER_LENGTH = FRAME_LENGTH * 2;
+    const COUNTER_LENGTH = FRAME_LENGTH * 1;
 
     let textClips = [];
-    const offset = new Shotstack.Offset;
+    const dateOffset = new Shotstack.Offset;
+    const countryOffset = new Shotstack.Offset;
 
     for (let i = 0; i < cases.length; i++) {
         const totalCases = cases[i].total_cases;
@@ -63,7 +64,7 @@ const generateVideo = (country, cases) => {
             .setStyle('future')
             .setText(date)
             .setSize('small')
-            .setOffset(offset.setY(-1));
+            .setOffset(dateOffset.setY(-1));
 
         let dateClip = new Shotstack.Clip;
         dateClip
@@ -80,6 +81,37 @@ const generateVideo = (country, cases) => {
     let textTrack = new Shotstack.Track;
     textTrack
         .setClips(textClips);
+
+    let countryText = new Shotstack.TitleAsset;
+    countryText
+        .setStyle('future')
+        .setText(country)
+        .setSize('medium')
+        .setPosition('top');
+
+    let countryClip = new Shotstack.Clip;
+    countryClip
+        .setAsset(countryText)
+        .setStart(0)
+        .setLength(videoLength);
+
+    let covidText = new Shotstack.TitleAsset;
+    covidText
+        .setStyle('future')
+        .setText('COVID-19 CASES')
+        .setSize('x-small')
+        .setPosition('top')
+        .setOffset(countryOffset.setY(-0.3));
+
+    let covidClip = new Shotstack.Clip;
+    covidClip
+        .setAsset(covidText)
+        .setStart(0)
+        .setLength(videoLength);
+
+    let countryTrack = new Shotstack.Track;
+    countryTrack
+        .setClips([countryClip, covidClip]);
 
     let backgroundVideo = new Shotstack.VideoAsset;
     backgroundVideo
@@ -104,7 +136,7 @@ const generateVideo = (country, cases) => {
     timeline
         .setBackground('#000000')
         .setSoundtrack(soundtrack)
-        .setTracks([textTrack, backgroundTrack]);
+        .setTracks([countryTrack, textTrack, backgroundTrack]);
 
     let output = new Shotstack.Output;
     output
@@ -128,10 +160,10 @@ const generateVideo = (country, cases) => {
     api.postRender(edit).then((data) => {
         let message = data.response.message;
         let id = data.response.id
-        
+
         console.log(message + '\n');
         console.log(PREVIEW_URL + CUSTOMER_ID + '/' + id + '.mp4');
-    
+
     }, (error) => {
         console.error('Request failed: ', error);
         process.exit(1);
