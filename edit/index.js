@@ -174,24 +174,8 @@ module.exports = (country, cases) => {
     let fixedTextTrack = new Shotstack.Track;
     fixedTextTrack
         .setClips([countryClip, covidClip, casesLabelClip, deathsLabelClip, casesPlaceholderClip, deathsPlaceholderClip]);
-
-    let backgroundVideo = new Shotstack.VideoAsset;
-    backgroundVideo
-        .setSrc('https://shotstack-assets.s3-ap-southeast-2.amazonaws.com/private/virus.mp4');
-
-    let backgroundClip = new Shotstack.Clip;
-    backgroundClip
-        .setAsset(backgroundVideo)
-        .setStart(0.5)
-        .setLength(videoLength - 0.5)
-        .setTransition(fadeIn)
-        .setOpacity(0.1);
-
-    let backgroundTrack = new Shotstack.Track;
-    backgroundTrack
-        .setClips([backgroundClip]);
     
-    const timeline = Timeline([fixedTextTrack, dataTrack, backgroundTrack])
+    const timeline = Timeline([fixedTextTrack, dataTrack], videoLength)
     const output = Output('mp4', 'sd');
 
     let edit = new Shotstack.Edit;
