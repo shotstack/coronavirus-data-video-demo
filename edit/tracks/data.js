@@ -4,15 +4,10 @@ const counter = require('./clips/counter');
 const date = require('./clips/date');
 const moment = require('moment');
 
-module.exports = (cases) => {
-    const VIDEO_TOP_LENGTH = 2;
-    const VIDEO_TAIL_LENGTH = 4;
-    const FRAME_LENGTH = 0.04;
-    const COUNTER_LENGTH = FRAME_LENGTH * 2;
-
-    let start = VIDEO_TOP_LENGTH;
+module.exports = (cases, videoTopLength, videoTailLength, frameLength) => {
+    const counterLength = frameLength * 2;
+    let start = videoTopLength;
     let videoLength = 0;
-
     let textClips = [];
 
     for (let i = 0; i < cases.length; i++) {
@@ -25,11 +20,11 @@ module.exports = (cases) => {
         }
 
         let clipStart = parseFloat(start.toFixed(2));
-        let clipLength = COUNTER_LENGTH;
+        let clipLength = counterLength;
 
         if (i === cases.length - 1) {
-            clipLength = VIDEO_TAIL_LENGTH;
-            videoLength = start + VIDEO_TAIL_LENGTH;
+            clipLength = videoTailLength;
+            videoLength = start + videoTailLength;
         }
 
         const casesClip = counter(Number(totalCases).toLocaleString(), clipStart, clipLength, 0, 0.5);
@@ -40,7 +35,7 @@ module.exports = (cases) => {
         textClips.push(deathsClip);
         textClips.push(dateClip);
 
-        start = (Number(start) + Number(clipLength) + Number(FRAME_LENGTH));
+        start = (Number(start) + Number(clipLength) + Number(frameLength));
     };
 
     let dataTrack = new Shotstack.Track;

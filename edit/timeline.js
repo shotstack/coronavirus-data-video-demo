@@ -1,21 +1,29 @@
 const Shotstack = require('shotstack-sdk');
 const soundtrack = require('./soundtrack');
-const backgroundVideo = require('./tracks/background');
-const fixedText = require('./tracks/fixed');
-const dataAnimation = require('./tracks/data');
+const background = require('./tracks/background');
+const fixed = require('./tracks/fixed');
+const data = require('./tracks/data');
 
 module.exports = (country, cases) => {
+    const VIDEO_TOP_LENGTH = 2;
+    const VIDEO_TAIL_LENGTH = 4;
+    const FRAME_LENGTH = 0.04;
+
     const color = '#000000';
-    const soundtrackSrc = soundtrack('https://shotstack-assets.s3-ap-southeast-2.amazonaws.com/private/bad-news.mp3', 'fadeInFadeOut');
-    const [dataTrack, videoLength] = dataAnimation(cases);
-    const backgroundTrack = backgroundVideo(videoLength);
-    const fixedTextTrack = fixedText(country, videoLength);
+    const audio = soundtrack('https://shotstack-assets.s3-ap-southeast-2.amazonaws.com/private/bad-news.mp3', 'fadeInFadeOut');
+    const [dataTrack, videoLength] = data(cases, VIDEO_TOP_LENGTH, VIDEO_TAIL_LENGTH, FRAME_LENGTH);
+    const backgroundTrack = background(videoLength);
+    const fixedTextTrack = fixed(country, videoLength, VIDEO_TOP_LENGTH, FRAME_LENGTH);
 
     let timeline = new Shotstack.Timeline;
     timeline
         .setBackground(color)
-        .setSoundtrack(soundtrackSrc)
-        .setTracks([dataTrack, fixedTextTrack, backgroundTrack]);
+        .setSoundtrack(audio)
+        .setTracks([
+            dataTrack,
+            fixedTextTrack,
+            backgroundTrack
+        ]);
 
     return timeline;
 }
