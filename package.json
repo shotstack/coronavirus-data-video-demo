@@ -2,9 +2,11 @@
   "name": "covid-19-daily-videos",
   "version": "1.0.0",
   "description": "Create daily videos per country of cases and deaths per day.",
-  "main": "queue.js",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dataset": "rm full_data.csv && wget https://covid.ourworldindata.org/data/ecdc/full_data.csv",
+    "generate": "node index.js"
   },
   "author": "",
   "license": "ISC",

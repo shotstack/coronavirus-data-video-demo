@@ -17,7 +17,7 @@ const DATASET = './full_data.csv';
 const country = argv.country;
 
 if (!country) {
-    console.log('No country selected. Please pass a country using --country');
+    console.log('No country selected. Please pass a country using --country.\n');
     process.exit(1);
 }
 
@@ -66,6 +66,11 @@ fs.createReadStream(DATASET)
         });
     })
     .on('finish', () => {
-        const cases = countries[country].sort((a, b) => a.date - b.date);
-        generateVideo(country, cases);
+        try {
+            const cases = countries[country].sort((a, b) => a.date - b.date);
+            generateVideo(country, cases);
+        } catch (err) {
+            console.log('Country could not be found. Check the `full_data.csv` file for correct spelling.\n');
+            process.exit(1);
+        }
     });
