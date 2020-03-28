@@ -42,14 +42,9 @@ const generateVideo = (country, cases) => {
 
     return new Promise((resolve, reject) => {
         api.postRender(request).then((data) => {
-            let message = data.response.message;
-            let id = data.response.id
-    
-            console.log(message);
-            return resolve(id);
+            return resolve(data.response.id);
         }, (error) => {
-            console.error('Request failed: ', error);
-            return reject();
+            return reject(error.response.body);
         })
     });
 }
@@ -66,7 +61,7 @@ const pollRenderStatus = (id) => {
                 const status = data.response.status;
                 
                 if (status === 'failed') {
-                    return reject('Video render failed');
+                    return reject(data.response.error);
                 }
                 
                 if (status === 'done') {
@@ -76,8 +71,7 @@ const pollRenderStatus = (id) => {
                 process.stdout.write('.');
                 setTimeout(poll, POLL_INTERVAL_SECONDS * 1000, id);
             }, (error) => {
-                console.error('Request failed: ', error);
-                reject();
+                reject(error.response.body);
             });
         })(id);
     });
@@ -109,12 +103,17 @@ fs.createReadStream(DATASET)
             const cases = countries[country].sort((a, b) => a.date - b.date);
 
             generateVideo(country, cases).then(id => {
+                console.log('Render Processing');
                 pollRenderStatus(id).then(url => {
                     console.log('\nRender Complete\nYour video is now available at the following URL:');
                     console.log(url);
+                }).catch(error => {
+                    console.log('Polling Failed', error);
                 });
+            }).catch(error => {
+                console.log('Render Request Failed', error);
             });
-        } catch (err) {
+        } catch (error) {
             console.log('Country could not be found. Check the `full_data.csv` file for correct spelling.\n');
             process.exit(1);
         }
