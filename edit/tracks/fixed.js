@@ -11,10 +11,10 @@ module.exports = (country, videoLength) => {
     const covidClip = heading('CORONAVIRUS (COVID-19) PANDEMIC', videoLength, 'x-small', 'top', 0, 0.1);
 
     const casesLabelClip = label(videoLength, VIDEO_TOP_LENGTH, FRAME_LENGTH, 'CONFIRMED CASES', 0, 1);
-    const casesPlaceholderClip = placeholder(VIDEO_TOP_LENGTH, FRAME_LENGTH, 0.5);
+    const casesPlaceholderClip = placeholder('0', VIDEO_TOP_LENGTH, FRAME_LENGTH, 0, 0.5);
 
     const deathsLabelClip = label(videoLength, VIDEO_TOP_LENGTH, FRAME_LENGTH, 'DEATHS', 0, -0.4);
-    const deathsPlaceholderClip = placeholder(VIDEO_TOP_LENGTH, FRAME_LENGTH, -0.9);
+    const deathsPlaceholderClip = placeholder('0', VIDEO_TOP_LENGTH, FRAME_LENGTH, 0, -0.9);
 
     let fixedTextTrack = new Shotstack.Track;
     fixedTextTrack

@@ -1,15 +1,18 @@
 const Shotstack = require('shotstack-sdk');
 
-module.exports = (topLength, frameLength, yOffset) => {
+module.exports = (value, topLength, frameLength, xOffset = 0, yOffset = 0) => {
     let fadeIn = new Shotstack.Transition;
     fadeIn.setIn('fade');
 
     let placeholderText = new Shotstack.TitleAsset;
     placeholderText
         .setStyle('future')
-        .setText('0')
+        .setText(value)
         .setSize('xx-large')
-        .setOffset({ y: yOffset });
+        .setOffset({
+            x: xOffset,
+            y: yOffset
+        });
 
     let placeholderClip = new Shotstack.Clip;
     placeholderClip

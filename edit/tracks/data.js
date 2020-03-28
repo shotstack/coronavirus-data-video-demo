@@ -1,5 +1,7 @@
 
 const Shotstack = require('shotstack-sdk');
+const counter = require('./clips/counter');
+const date = require('./clips/date');
 const moment = require('moment');
 
 module.exports = (cases) => {
@@ -16,7 +18,7 @@ module.exports = (cases) => {
     for (let i = 0; i < cases.length; i++) {
         const totalCases = cases[i].total_cases;
         const totalDeaths = cases[i].total_deaths;
-        const date = moment(cases[i].date).format('DD MMM YYYY');
+        const casesDate = moment(cases[i].date).format('DD MMM YYYY');
 
         if (totalCases <= 0) {
             continue;
@@ -30,51 +32,15 @@ module.exports = (cases) => {
             videoLength = start + VIDEO_TAIL_LENGTH;
         }
 
-        let casesText = new Shotstack.TitleAsset;
-        casesText
-            .setStyle('future')
-            .setText(Number(totalCases).toLocaleString())
-            .setSize('xx-large')
-            .setOffset({ y: 0.5 });
-
-        let casesClip = new Shotstack.Clip;
-        casesClip
-            .setAsset(casesText)
-            .setStart(Number(clipStart))
-            .setLength(Number(clipLength));
-
-        let deathsText = new Shotstack.TitleAsset;
-        deathsText
-            .setStyle('future')
-            .setText(Number(totalDeaths).toLocaleString())
-            .setSize('xx-large')
-            .setOffset({ y: -0.9 });
-
-        let deathsClip = new Shotstack.Clip;
-        deathsClip
-            .setAsset(deathsText)
-            .setStart(Number(clipStart))
-            .setLength(Number(clipLength));
-
-        let dateText = new Shotstack.TitleAsset;
-        dateText
-            .setStyle('future')
-            .setText(date)
-            .setSize('small')
-            .setPosition('bottom')
-            .setOffset({ y: -0.35 });
-
-        let dateClip = new Shotstack.Clip;
-        dateClip
-            .setAsset(dateText)
-            .setStart(Number(clipStart))
-            .setLength(Number(clipLength));
-
-        start = (Number(start) + Number(clipLength) + Number(FRAME_LENGTH));
+        const casesClip = counter(Number(totalCases).toLocaleString(), clipStart, clipLength, 0, 0.5);
+        const deathsClip = counter(Number(totalDeaths).toLocaleString(), clipStart, clipLength, 0, -0.9);
+        const dateClip = date(casesDate, clipStart, clipLength, 0, -0.35);
 
         textClips.push(casesClip);
         textClips.push(deathsClip);
         textClips.push(dateClip);
+
+        start = (Number(start) + Number(clipLength) + Number(FRAME_LENGTH));
     };
 
     let dataTrack = new Shotstack.Track;
