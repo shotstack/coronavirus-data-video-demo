@@ -13,17 +13,23 @@ const ENDPOINT = process.env.SHOTSTACK_ENDPOINT;
 const CUSTOMER_ID = process.env.SHOTSTACK_CUSTOMER_ID;
 const PREVIEW_URL = process.env.SHOTSTACK_PREVIEW_URL;
 const DATASET = './full_data.csv';
-const MAX_LIMIT = 1000;
-const SKIP = argv.skip || 0;
-const LIMIT = Math.min(argv.limit || MAX_LIMIT, MAX_LIMIT);
+
+const country = argv.country;
+
+if (!country) {
+    console.log('No country selected. Please pass a country using --country');
+    process.exit(1);
+}
 
 let countries = [];
-let count = 0;
 
 const generateVideo = (country, cases) => {
-
     const request = edit(country, cases);
-    //console.log(JSON.stringify(edit, null, 2)); return;
+
+    if (argv.debug) {
+        console.log(JSON.stringify(request, null, 2));
+        return;
+    }
 
     const defaultClient = Shotstack.ApiClient.instance;
     const DeveloperKey = defaultClient.authentications['DeveloperKey'];
@@ -36,33 +42,18 @@ const generateVideo = (country, cases) => {
         let message = data.response.message;
         let id = data.response.id
 
-        console.log(message + '\n');
+        console.log(message);
+        console.log('Your video will be ready soon at the following URL:');
         console.log(PREVIEW_URL + CUSTOMER_ID + '/' + id + '.mp4');
-
     }, (error) => {
         console.error('Request failed: ', error);
         process.exit(1);
     })
 }
 
-const prepareVideos = countries => {
-    for (let country in countries) {
-        const name = country;
-        const cases = countries[country].sort((a, b) => a.date - b.date);
-
-        generateVideo(name, cases);
-    }
-}
-
 fs.createReadStream(DATASET)
     .pipe(csv.parse({ headers: true }))
     .on('data', row => {
-        count = count + 1;
-
-        if (count <= SKIP || count > (SKIP + LIMIT)) {
-            return;
-        }
-
         const location = row['location'];
 
         countries[location] = countries[location] || [];
@@ -75,5 +66,6 @@ fs.createReadStream(DATASET)
         });
     })
     .on('finish', () => {
-        prepareVideos(countries);
+        const cases = countries[country].sort((a, b) => a.date - b.date);
+        generateVideo(country, cases);
     });
