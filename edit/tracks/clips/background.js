@@ -6,7 +6,7 @@ module.exports = (videoLength) => {
 
     let backgroundVideo = new Shotstack.VideoAsset;
     backgroundVideo
-        .setSrc('https://shotstack-assets.s3-ap-southeast-2.amazonaws.com/private/virus.mp4');
+        .setSrc('https://shotstack-assets.s3-ap-southeast-2.amazonaws.com/footage/virus.mp4');
 
     let backgroundClip = new Shotstack.Clip;
     backgroundClip
