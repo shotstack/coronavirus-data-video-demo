@@ -1,7 +1,7 @@
 const moment = require('moment');
 const Shotstack = require('shotstack-sdk');
-const Timeline = require('./timeline');
-const Output = require('./output');
+const timeline = require('./timeline');
+const output = require('./output');
 
 module.exports = (country, cases) => {
     const VIDEO_TOP_LENGTH = 2;
@@ -78,110 +78,17 @@ module.exports = (country, cases) => {
         textClips.push(dateClip);
     };
 
-    let fadeIn = new Shotstack.Transition;
-    fadeIn.setIn('fade');
-
     let dataTrack = new Shotstack.Track;
     dataTrack
         .setClips(textClips);
 
-    let countryText = new Shotstack.TitleAsset;
-    countryText
-        .setStyle('chunkLight')
-        .setText(country.toUpperCase())
-        .setSize('medium')
-        .setPosition('top')
-        .setOffset({ y: 0.4 });
-
-    let countryClip = new Shotstack.Clip;
-    countryClip
-        .setAsset(countryText)
-        .setStart(0.5)
-        .setLength(videoLength - 0.5)
-        .setTransition(fadeIn);
-
-    let covidText = new Shotstack.TitleAsset;
-    covidText
-        .setStyle('future')
-        .setText('CORONAVIRUS (COVID-19) PANDEMIC')
-        .setSize('x-small')
-        .setPosition('top')
-        .setOffset({ y: 0.1 });
-
-    let covidClip = new Shotstack.Clip;
-    covidClip
-        .setAsset(covidText)
-        .setStart(0.75)
-        .setLength(videoLength - 0.75)
-        .setTransition(fadeIn);
-
-    let casesLabelText = new Shotstack.TitleAsset;
-    casesLabelText
-        .setStyle('chunkLight')
-        .setText('CONFIRMED CASES')
-        .setSize('x-small')
-        .setOffset({ y: 1 });
-
-    let casesLabelClip = new Shotstack.Clip;
-    casesLabelClip
-        .setAsset(casesLabelText)
-        .setStart(Number(VIDEO_TOP_LENGTH - 1 - FRAME_LENGTH))
-        .setLength(videoLength - Number(VIDEO_TOP_LENGTH - 1 - FRAME_LENGTH))
-        .setTransition(fadeIn);
-
-    let deathsLabelText = new Shotstack.TitleAsset;
-    deathsLabelText
-        .setStyle('chunkLight')
-        .setText('DEATHS')
-        .setSize('x-small')
-        .setOffset({ y: -0.4 });
-
-    let deathsLabelClip = new Shotstack.Clip;
-    deathsLabelClip
-        .setAsset(deathsLabelText)
-        .setStart(Number(VIDEO_TOP_LENGTH - 1 - FRAME_LENGTH))
-        .setLength(videoLength - Number(VIDEO_TOP_LENGTH - 1 - FRAME_LENGTH))
-        .setTransition(fadeIn);
-
-    let casesPlaceholderText = new Shotstack.TitleAsset;
-    casesPlaceholderText
-        .setStyle('future')
-        .setText('0')
-        .setSize('xx-large')
-        .setOffset({ y: 0.5 });
-
-    let casesPlaceholderClip = new Shotstack.Clip;
-    casesPlaceholderClip
-        .setAsset(casesPlaceholderText)
-        .setStart(Number(VIDEO_TOP_LENGTH - 1 - FRAME_LENGTH))
-        .setLength(1)
-        .setTransition(fadeIn);
-
-    let deathsPlaceholderText = new Shotstack.TitleAsset;
-    deathsPlaceholderText
-        .setStyle('future')
-        .setText('0')
-        .setSize('xx-large')
-        .setOffset({ y: -0.9 });
-
-    let deathsPlaceholderClip = new Shotstack.Clip;
-    deathsPlaceholderClip
-        .setAsset(deathsPlaceholderText)
-        .setStart(Number(VIDEO_TOP_LENGTH - 1 - FRAME_LENGTH))
-        .setLength(1)
-        .setTransition(fadeIn);
-
-    let fixedTextTrack = new Shotstack.Track;
-    fixedTextTrack
-        .setClips([countryClip, covidClip, casesLabelClip, deathsLabelClip, casesPlaceholderClip, deathsPlaceholderClip]);
-    
-    const timeline = Timeline([fixedTextTrack, dataTrack], videoLength)
-    const output = Output('mp4', 'sd');
+    const videoTimeline = timeline([dataTrack], videoLength, country)
+    const videoOutput = output('mp4', 'sd');
 
     let edit = new Shotstack.Edit;
     edit
-        .setTimeline(timeline)
-        .setOutput(output);
+        .setTimeline(videoTimeline)
+        .setOutput(videoOutput);
 
     return edit;
 }

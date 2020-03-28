@@ -6,7 +6,7 @@ const fs = require('fs');
 const csv = require('fast-csv');
 const argv = require('yargs').argv;
 const Shotstack = require('shotstack-sdk');
-const Edit = require('./edit');
+const edit = require('./edit');
 
 const API_KEY = process.env.SHOTSTACK_KEY;
 const ENDPOINT = process.env.SHOTSTACK_ENDPOINT;
@@ -22,7 +22,7 @@ let count = 0;
 
 const generateVideo = (country, cases) => {
 
-    const edit = Edit(country, cases);
+    const request = edit(country, cases);
     //console.log(JSON.stringify(edit, null, 2)); return;
 
     const defaultClient = Shotstack.ApiClient.instance;
@@ -32,7 +32,7 @@ const generateVideo = (country, cases) => {
     defaultClient.basePath = ENDPOINT;
     DeveloperKey.apiKey = API_KEY;
 
-    api.postRender(edit).then((data) => {
+    api.postRender(request).then((data) => {
         let message = data.response.message;
         let id = data.response.id
 
