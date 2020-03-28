@@ -67,3 +67,6 @@ npm run generate -- --country 'Australia'
 Note: the country value is case sensitive and must be entered exactly as it is stored in
 the `Location` column in the CSV file. i.e. 'United States' - alternatives like 'US', 'USA' 
 or lowercase  'united states' will not work.
+
+The edit request will be sent to the Shotstack API to be queued for rendering. After approximately 
+20 seconds the video will be ready and the URL will be output to the terminal.
