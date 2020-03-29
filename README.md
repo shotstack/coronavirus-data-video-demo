@@ -2,6 +2,8 @@
 
 This is a demo to showcase using a data source to generate videos using the [Shotstack API](https://shotstack.io/docs/api/index.html).
 
+[![covid-data-video-opt](https://user-images.githubusercontent.com/1064199/77845439-b2939300-71fa-11ea-826b-dd0c10f2e19a.gif)](https://youtu.be/TOQAbfCNV_o)
+
 A NodeJS script loops through a data set of Coronavirus (Covid-19) global pandemic cases and deaths 
 sourced from [Our World In Data](https://ourworldindata.org/coronavirus-source-data) and generates a 
 video for a selected country.
