@@ -52,6 +52,14 @@ npm run dataset
 
 A CSV file `full_data.csv` is downloaded and saved in the project root directory.
 
+### List Countries
+
+Display the list of countries available in the CSV file:
+
+```
+npm run list
+```
+
 ### Generate Video
 
 Run the following command with the country you wish to generate a video for:
@@ -67,8 +75,8 @@ npm run generate -- --country 'Australia'
 ```
 
 Note: the country value is case sensitive and must be entered exactly as it is stored in
-the `Location` column in the CSV file. i.e. 'United States' - alternatives like 'US', 'USA' 
-or lowercase  'united states' will not work.
+the `Location` column in the CSV file. Use the `npm run list` command to see a list of 
+countries.
 
 The edit request will be sent to the Shotstack API to be queued for rendering. After approximately 
 20 seconds the video will be ready and the URL will be output to the terminal.
