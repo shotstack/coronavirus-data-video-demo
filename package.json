@@ -14,7 +14,7 @@
   "dependencies": {
     "dotenv": "^8.2.0",
     "fast-csv": "^4.3.6",
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "shotstack-sdk": "0.0.17",
     "yargs": "^15.4.1"
   }
